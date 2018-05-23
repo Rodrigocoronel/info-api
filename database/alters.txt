@@ -1,0 +1,4 @@
+ALTER TABLE `users`  ADD `phone` VARCHAR(20) NULL  AFTER `password`;
+ALTER TABLE `receive_order` ADD `factura` VARCHAR(40) NULL AFTER `status`;
+
+ALTER TABLE `receive_order` CHANGE `status` `status` TINYINT(1) UNSIGNED NOT NULL;
