@@ -31,9 +31,27 @@ Route::middleware(['auth:api'])->group(function () {
 
     	return $user;
     });
+    Route::post('/logout', function(Request $request) {
+		$request->user()->token()->revoke();
+		return response()->json([]);
+	});
+
+
+
+
+
+
 
 });
 
+	Route::get('/configuracion', 'ConfiguracionController@show');
+	Route::put('/configuracion', 'ConfiguracionController@update');
 
+
+	Route::get('/secciones', 'SeccionesController@index');
+	Route::get('/secciones/{id}', 'SeccionesController@show');	
+	Route::post('/secciones', 'SeccionesController@register');
+	Route::put('/secciones/{id}', 'SeccionesController@update');
+	Route::delete('/secciones/{id}', 'SeccionesController@destroy');
 
 
