@@ -25,6 +25,14 @@ class SeccionesController extends Controller
         return response()->json($output);
     }
 
+
+    public function has($has)
+    {
+       
+        $data = Secciones::->where('has','=',$has)->get();
+          return $this->build_categoria($data);
+    }
+
     public function register(Request $request){
         $output = [];
         $data = $request->input();

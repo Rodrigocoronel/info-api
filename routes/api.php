@@ -54,4 +54,6 @@ Route::middleware(['auth:api'])->group(function () {
 	Route::post('/secciones/{id}', 'SeccionesController@update');
 	Route::delete('/secciones/{id}', 'SeccionesController@destroy');
 
+	Route::get('/secciones_has/{has}', 'SeccionesController@has');
+
 
