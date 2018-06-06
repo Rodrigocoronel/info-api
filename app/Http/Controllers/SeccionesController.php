@@ -26,11 +26,21 @@ class SeccionesController extends Controller
     }
 
 
-    public function has($has)
+    public function has(Request $req)
     {
-       
-        $data = Secciones::->where('has','=',$has)->get();
-          return $this->build_categoria($data);
+      $matches = $req->input("matches");
+      $matches = array_unique($matches); 
+
+      $data = Secciones::whereIn('has', $matches)->get();
+
+      $data->transform(function($r) {
+
+        return $this->build_categoria($r);
+
+      });
+
+      return response()->json($data);
+
     }
 
     public function register(Request $request){
