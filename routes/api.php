@@ -45,13 +45,13 @@ Route::middleware(['auth:api'])->group(function () {
 });
 
 	Route::get('/configuracion', 'ConfiguracionController@show');
-	Route::put('/configuracion', 'ConfiguracionController@update');
+	Route::post('/configuracion/{id}', 'ConfiguracionController@update');
 
 
 	Route::get('/secciones', 'SeccionesController@index');
 	Route::get('/secciones/{id}', 'SeccionesController@show');	
 	Route::post('/secciones', 'SeccionesController@register');
-	Route::put('/secciones/{id}', 'SeccionesController@update');
+	Route::post('/secciones/{id}', 'SeccionesController@update');
 	Route::delete('/secciones/{id}', 'SeccionesController@destroy');
 
 
