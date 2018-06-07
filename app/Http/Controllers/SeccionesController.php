@@ -63,6 +63,11 @@ class SeccionesController extends Controller
          $data = Secciones::find($id);  
          return response()->json($data);
     }
+     public function seccion($seccion)
+    {          
+         $data = Secciones::where('seccion','=',$seccion)->get();  
+         return response()->json($data);
+    }
 
      public function destroy($id)
     {        
