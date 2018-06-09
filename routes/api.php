@@ -57,4 +57,8 @@ Route::middleware(['auth:api'])->group(function () {
 	Route::post('/secciones_has/', 'SeccionesController@has');
 	Route::get('/seccion/{seccion}', 'SeccionesController@seccion');
 
+	Route::get('/print/seccion/{id}', 'PorcentajeController@print');
+
+	Route::get('/porcentajes/seccion/{id}','PorcentajeController@seccion');
+
 
