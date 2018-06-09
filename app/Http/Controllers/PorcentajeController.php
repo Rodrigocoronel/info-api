@@ -17,14 +17,25 @@ class PorcentajeController extends Controller
      */
 
 
-    public function print($poId)
+    public function print($distrito)
     {
-        $po  = Porcentajes::find(1);
+        ini_set('memory_limit', '-1');
+        $po  = Porcentajes::where('distrito','=',$distrito)->take(10)->get();
+        //$po  = Porcentajes::find(1);
+        //mkdir(storage_path().'/'.$distrito);
+            $pdf    = PDF::loadView('pdf.seccion', ['valores' => $po ]);
+            //echo 'oli';
 
-        $pdf    = PDF::loadView('pdf.seccion', ['po' => $po ]);
+            //$pdf->save("Seccion".$value->id.".pdf");
+
+            $pdf->save(storage_path().'/'.$distrito.'.pdf');
+        
+        
+        //print_r($po);
+        
 
         //
-        return $pdf->stream("Seccion".$po->id.".pdf");
+        
     }
 
      public function seccion($seccion)

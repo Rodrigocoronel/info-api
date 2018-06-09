@@ -42,6 +42,8 @@
 		table.header td {
 			
 		}
+
+		footer {}
 		
 		.logo {
 			display: block;
@@ -99,7 +101,11 @@
 <body>
 	<!-- <img src="images/logomaxicont.png" alt="My SVG Icon" width="360" height="58"> -->
 
-	<img src="images/mxli.png" alt="My SVG Icon" width="100%" height="500px">
+	<?php 
+
+	foreach ($valores as $key => $po) { ?>
+		
+		<img src="images/mxli.png" alt="My SVG Icon" width="100%" height="500px">
 	general
 	<div>
 		<table class="intro">
@@ -150,5 +156,15 @@
 			</tr>
 		</table>
 	</div>
+
+	<div style="page-break-after: always;"></div>
+
+
+	<?php
+	}
+
+
+	?>
+
 </body>
 </html>
