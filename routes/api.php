@@ -55,10 +55,22 @@ Route::middleware(['auth:api'])->group(function () {
 	Route::delete('/secciones/{id}', 'SeccionesController@destroy');
 
 	Route::post('/secciones_has/', 'SeccionesController@has');
+	
+
+	/*Nimblin*/
 	Route::get('/seccion/{seccion}', 'SeccionesController@seccion');
+	Route::get('/promedio_diputados','PorcentajeController@promedioDiputados');
+	Route::get('/promedio_senadores','PorcentajeController@promedioSenadores');
+	Route::get('/seccionesPorDistrito/{distrito}', 'PorcentajeController@Todos');
 
-	Route::get('/print/seccion/{distrito}', 'PorcentajeController@print');
-
+	/* we natives */
 	Route::get('/porcentajes/seccion/{id}','PorcentajeController@seccion');
+	Route::get('/porcentajesSen/seccion/{id}','PorcentajeController@seccionSen');
+
+	/*print*/
+	Route::get('/print/seccion/{distrito}', 'PorcentajeController@print');
+	Route::get('/print/seccionUni/{id}','PorcentajeController@printSeccion');
+
+
 
 

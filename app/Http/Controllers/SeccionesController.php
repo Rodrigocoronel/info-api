@@ -78,7 +78,7 @@ class SeccionesController extends Controller
         return [
 
             'value'     => $u->id,
-            'has'     => $u->has,
+            'has'     => "#".$u->seccion,
             'lat'     => $u->lat,
             'lng'     => $u->lng,
            

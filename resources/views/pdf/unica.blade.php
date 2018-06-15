@@ -117,12 +117,6 @@
 <body>
 	<!-- <img src="images/logomaxicont.png" alt="My SVG Icon" width="360" height="58"> -->
 
-	<?php 
-
-	foreach ($valores as $key => $po) {
-		$src = '';
-		$src = 'images/'.$po->seccion.'.png';
-	?>
 	<h2 style="color: #636363">Sección {{$po->seccion}}</h2><br/>
 	<img src=<?=$src?>  width="100%" height="500px">
 	<div style="margin-top: 15px;">
@@ -200,14 +194,7 @@
 
 	</div>
 
-	<div style="page-break-after: always;"></div>
 
-
-	<?php
-	}
-
-
-	?>
 
 </body>
 </html>
