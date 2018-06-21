@@ -61,7 +61,8 @@ Route::middleware(['auth:api'])->group(function () {
 	Route::get('/seccion/{seccion}', 'SeccionesController@seccion');
 	Route::get('/promedio_diputados','PorcentajeController@promedioDiputados');
 	Route::get('/promedio_senadores','PorcentajeController@promedioSenadores');
-	Route::get('/seccionesPorDistrito/{distrito}', 'PorcentajeController@Todos');
+	Route::get('/diputadosPorDistrito/{distrito}', 'PorcentajeController@Diputados');
+	Route::get('/senadoresPorDistrito/{distrito}', 'PorcentajeController@Senadores');
 
 	/* we natives */
 	Route::get('/porcentajes/seccion/{id}','PorcentajeController@seccion');

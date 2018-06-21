@@ -50,7 +50,8 @@ class PorcentajeController extends Controller
                 array( 'value' => (double) $item->c_pri, 'name' => 'Pri'),
                 array( 'value' => (double) $item->c_morena, 'name' => 'Morena'),
                 array( 'value' => (double) $item->c_otros, 'name' => 'Otros') ),
-            'labelP'    => 'Procupaciones'
+            'labelP'    => 'Procupaciones',
+
         ];
 
     }
@@ -133,24 +134,34 @@ class PorcentajeController extends Controller
          return response()->json($output);
     }
 
-    public function Todos($distrito){
+    public function Diputados($distrito){
         $data = Porcentajes::where('distrito', '=' , $distrito)->get();
 
         return response()->json($data);
     }
 
-    public function promedioDiputados() {
-        $output = [];
-        $promPan = Porcentajes::avg('p_pan');
-        $promPri = Porcentajes::avg('p_pri');
-        $promMorena = Porcentajes::avg('p_morena');
-        $promOtros = Porcentajes::avg('p_otros');
+    public function Senadores($distrito){
+        $data = Porcentajes_senadores::where('distrito', '=' , $distrito)->get();
 
-        $output['pan'] = round($promPan,2);
-        $output['pri'] = round($promPri,2);
-        $output['morena'] = round($promMorena,2);
-        $output['otros']  = round($promOtros,2);
-        $output['label'] = 'partidos';
+        return response()->json($data);
+    }
+
+    public function promedioDiputados() {
+       
+        $output = [];
+
+        for ($x=1; $x < 9; $x++) { 
+            $distrito = Porcentajes::where('distrito','=',$x)->get();
+            array_push($output, 
+                array(
+                    'pan'       => round($distrito->avg('p_pan'),2),
+                    'pri'       => round($distrito->avg('p_pri'),2), 
+                    'morena'    => round($distrito->avg('p_morena'),2),
+                    'otros'     => round($distrito->avg('p_otros'),2),
+                )
+            );
+
+        }
 
         return response()->json($output);
     }
