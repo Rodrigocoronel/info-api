@@ -36,10 +36,7 @@ Route::middleware(['auth:api'])->group(function () {
 		return response()->json([]);
 	});
 
-
-
-
-
+    Route::get('/diputadosPorDistrito/{distrito}', 'PorcentajeController@Diputados');
 
 
 });
@@ -63,10 +60,12 @@ Route::middleware(['auth:api'])->group(function () {
 	Route::get('/promedio_senadores','PorcentajeController@promedioSenadores');
 	Route::get('/diputadosPorDistrito/{distrito}', 'PorcentajeController@Diputados');
 	Route::get('/senadoresPorDistrito/{distrito}', 'PorcentajeController@Senadores');
+	Route::get('/periodoDiputados', 'PorcentajeController@periodoDiputados');
+	Route::get('/periodoSenadores', 'PorcentajeController@periodoSenadores');
 
 	/* we natives */
-	Route::get('/porcentajes/seccion/{id}','PorcentajeController@seccion');
-	Route::get('/porcentajesSen/seccion/{id}','PorcentajeController@seccionSen');
+	Route::get('/porcentajes/seccion/{id}/{periodo}','PorcentajeController@seccion');
+	Route::get('/porcentajesSen/seccion/{id}/{periodo}','PorcentajeController@seccionSen');
 
 	/*print*/
 	Route::get('/print/seccion/{distrito}', 'PorcentajeController@print');

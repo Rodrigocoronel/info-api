@@ -8,6 +8,8 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 
 use Laravel\Passport\Passport;
 
+use Carbon\Carbon;
+
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -30,7 +32,7 @@ class AuthServiceProvider extends ServiceProvider
         
         Passport::routes();
 
-        Passport::tokensExpireIn(now()->addDays(15));
+        Passport::tokensExpireIn(Carbon::now()->addMinutes(1));
 
     }
 }

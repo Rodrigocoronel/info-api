@@ -8,6 +8,7 @@ use Illuminate\Database\Query\Expression as Expression;
 use App\Porcentajes;
 use App\Porcentajes_senadores;
 use PDF;
+use DB;
 
 class PorcentajeController extends Controller
 {
@@ -51,6 +52,7 @@ class PorcentajeController extends Controller
                 array( 'value' => (double) $item->c_morena, 'name' => 'Morena'),
                 array( 'value' => (double) $item->c_otros, 'name' => 'Otros') ),
             'labelP'    => 'Procupaciones',
+            'created_at'    => $item->created_at,
 
         ];
 
@@ -102,16 +104,17 @@ class PorcentajeController extends Controller
                 array( 'value' => (double) $item->s2_pri, 'name' => 'Pri'),
                 array( 'value' => (double) $item->s2_morena, 'name' => 'Morena'),
                 array( 'value' => (double) $item->s2_otros, 'name' => 'Otros') ),
+            'created_at'    => $item->created_at,
         ];
 
     }
     
 
-     public function seccion($seccion)
+     public function seccion($seccion, $periodo)
     {          
         $output = [];
         $container = [];
-        $data = Porcentajes::where('seccion','=',$seccion)->get(); 
+        $data = Porcentajes::where('seccion','=',$seccion)->where('created_at','=',$periodo)->get(); 
 
         $output = $data->transform(function($item){
             return $this->build_seccion($item);
@@ -121,11 +124,11 @@ class PorcentajeController extends Controller
          
     }
 
-    public function seccionSen($seccion)
+    public function seccionSen($seccion, $periodo)
     {
         $output = [];
 
-        $data = Porcentajes_senadores::where('seccion','=',$seccion)->get();  
+        $data = Porcentajes_senadores::where('seccion','=',$seccion)->where('created_at','=',$periodo)->get();  
 
         $output = $data->transform(function($item){
             return $this->build_seccion_senadores($item);
@@ -182,7 +185,25 @@ class PorcentajeController extends Controller
         return response()->json($output);
     }
 
-   
+    public function periodoDiputados(){
+
+        $periodos = DB::table('porcentajes')
+                ->select('created_at')
+                ->groupBy('created_at')
+                ->get();
+
+        return response()->json($periodos);
+    }   
+
+    public function periodoSenadores(){
+
+        $periodos = DB::table('porcentajes_senadores')
+                ->select('created_at')
+                ->groupBy('created_at')
+                ->get();
+
+        return response()->json($periodos);
+    }  
 
    
 }
