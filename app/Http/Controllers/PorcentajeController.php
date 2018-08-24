@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+include 'mikml.php';
+
 use Illuminate\Http\Request;
 use Illuminate\Database\Query\Expression as Expression;
 
@@ -137,44 +139,41 @@ class PorcentajeController extends Controller
          return response()->json($output);
     }
 
-    public function Diputados($distrito){
-        $data = Porcentajes::where('distrito', '=' , $distrito)->get();
+    public function Diputados($distrito, $periodo){
+        $data = Porcentajes::where('distrito', '=' , $distrito)->where('created_at','=',$periodo)->get();
 
         return response()->json($data);
     }
 
-    public function Senadores($distrito){
-        $data = Porcentajes_senadores::where('distrito', '=' , $distrito)->get();
+    public function Senadores($distrito, $periodo){
+        $data = Porcentajes_senadores::where('distrito', '=' , $distrito)->where('created_at','=',$periodo)->get();
 
         return response()->json($data);
     }
 
-    public function promedioDiputados() {
+    public function promedioDiputados($distrito , $periodo) {
        
-        $output = [];
+        $output[] = [];
 
-        for ($x=1; $x < 9; $x++) { 
-            $distrito = Porcentajes::where('distrito','=',$x)->get();
-            array_push($output, 
-                array(
-                    'pan'       => round($distrito->avg('p_pan'),2),
-                    'pri'       => round($distrito->avg('p_pri'),2), 
-                    'morena'    => round($distrito->avg('p_morena'),2),
-                    'otros'     => round($distrito->avg('p_otros'),2),
-                )
-            );
+        $distrito = Porcentajes::where('distrito','=',$distrito)->where('created_at','=',$periodo)->get();
 
-        }
+            $output['pan']      = round($distrito->avg('c_pan'),2);
+            $output['pri']      = round($distrito->avg('c_pri'),2);
+            $output['morena']   = round($distrito->avg('c_morena'),2);
+            $output['otros']    = round($distrito->avg('c_otros'),2);
+            $output['label']    = 'candidatos';
 
         return response()->json($output);
     }
 
-    public function promedioSenadores() {
+    public function promedioSenadores($periodo) {
         $output = [];
-        $promPan = Porcentajes_senadores::avg('p_pan');
-        $promPri = Porcentajes_senadores::avg('p_pri');
-        $promMorena = Porcentajes_senadores::avg('p_morena');
-        $promOtros = Porcentajes_senadores::avg('p_otros');
+        $prom = Porcentajes_senadores::where('created_at','=',$periodo)->get();
+
+        $promPan = $prom->avg('p_pan');
+        $promPri = $prom->avg('p_pri');
+        $promMorena = $prom->avg('p_morena');
+        $promOtros = $prom->avg('p_otros');
 
         $output['pan'] = round($promPan,2);
         $output['pri'] = round($promPri,2);
@@ -204,6 +203,124 @@ class PorcentajeController extends Controller
 
         return response()->json($periodos);
     }  
+
+
+    public function generarKml() {
+        $x =1;
+
+        for($x ; $x<9 ; $x++) {
+
+            GenerarKML("Diputados","Distrito ".$x,"2018-05-31");
+
+        }
+
+        return response()->json(['done']);
+    }
+
+
+    public function seccionesDiputadosDistrito( $distrito,$periodo ) {
+
+       
+
+        $porcentajes = DB::table('porcentajes')
+                ->select('seccion','c_pan','c_pri','c_morena','distrito')
+                ->where('distrito','=',$distrito)
+                ->where('created_at','=',$periodo)
+                ->orderBy('seccion','asc')
+                ->get();
+
+        $output = $porcentajes->transform(function($item){
+            $colores = array( 'pan'=>'#0000ff','pri'=>'#aa0000', 'morena' => '#aa5500' , 'panpri'=>'#aa00ff' , 'panmorena'=>'#ffff00' , 'primorena'=>'#000000' );
+            $color = '';
+            $finalKey = '';
+            $array = [];
+            $array['pan']       = (double)$item->c_pan;
+            $array['pri']       = (double)$item->c_pri;
+            $array['morena']    = (double)$item->c_morena;
+
+            arsort($array);
+            $keys = array_keys($array);
+
+            $diferencia = abs($array[$keys[0]] - $array[$keys[1]] );
+
+            if($diferencia > 2){
+                if(array_key_exists($keys[0], $colores)){
+                    $color = $colores[$keys[0]];
+                    $finalKey = $keys[0];
+                }else{
+                    $color = 'default';
+                }
+            }else{
+                if(array_key_exists($keys[0].''.$keys[1], $colores)){
+                    $color = $colores[$keys[0].''.$keys[1]];
+                    $finalKey = $keys[0].''.$keys[1];
+                }else{
+                    $color = $colores[$keys[1].''.$keys[0]];
+                    $finalKey = $keys[1].''.$keys[0];
+                }
+                
+            }
+            return [
+                'seccion'   => $item->seccion,
+                'color'     => $color,
+                'distrito'  => $item->distrito
+            ];
+        });
+        return response()->json($output);
+
+    }
+
+    public function seccionesSenadoresDistrito( $distrito,$periodo ) {
+
+       
+
+        $porcentajes = DB::table('porcentajes_senadores')
+                ->select('seccion','p_pan','p_pri','p_morena','distrito')
+                ->where('distrito','=',$distrito)
+                ->where('created_at','=',$periodo)
+                ->orderBy('seccion','asc')
+                ->get();
+
+        $output = $porcentajes->transform(function($item){
+            $colores = array( 'pan'=>'#0000ff','pri'=>'#aa0000', 'morena' => '#aa5500' , 'panpri'=>'#aa00ff' , 'panmorena'=>'#ffff00' , 'primorena'=>'#000000' );
+            $color = '';
+            $finalKey = '';
+            $array = [];
+            $array['pan']       = (double)$item->p_pan;
+            $array['pri']       = (double)$item->p_pri;
+            $array['morena']    = (double)$item->p_morena;
+
+            arsort($array);
+            $keys = array_keys($array);
+
+            $diferencia = abs($array[$keys[0]] - $array[$keys[1]] );
+
+            if($diferencia > 2){
+                if(array_key_exists($keys[0], $colores)){
+                    $color = $colores[$keys[0]];
+                    $finalKey = $keys[0];
+                }else{
+                    $color = 'default';
+                }
+            }else{
+                if(array_key_exists($keys[0].''.$keys[1], $colores)){
+                    $color = $colores[$keys[0].''.$keys[1]];
+                    $finalKey = $keys[0].''.$keys[1];
+                }else{
+                    $color = $colores[$keys[1].''.$keys[0]];
+                    $finalKey = $keys[1].''.$keys[0];
+                }
+                
+            }
+            return [
+                'seccion'   => $item->seccion,
+                'color'     => $color,
+                'distrito'  => $item->distrito
+            ];
+        });
+        return response()->json($output);
+
+    }
 
    
 }

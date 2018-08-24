@@ -36,7 +36,7 @@ Route::middleware(['auth:api'])->group(function () {
 		return response()->json([]);
 	});
 
-    Route::get('/diputadosPorDistrito/{distrito}', 'PorcentajeController@Diputados');
+    //Route::get('/diputadosPorDistrito/{distrito}', 'PorcentajeController@Diputados');
 
 
 });
@@ -56,12 +56,17 @@ Route::middleware(['auth:api'])->group(function () {
 
 	/*Nimblin*/
 	Route::get('/seccion/{seccion}', 'SeccionesController@seccion');
-	Route::get('/promedio_diputados','PorcentajeController@promedioDiputados');
-	Route::get('/promedio_senadores','PorcentajeController@promedioSenadores');
-	Route::get('/diputadosPorDistrito/{distrito}', 'PorcentajeController@Diputados');
-	Route::get('/senadoresPorDistrito/{distrito}', 'PorcentajeController@Senadores');
+	Route::get('/promedio_diputados/{distrito}/{periodo}','PorcentajeController@promedioDiputados');
+	Route::get('/promedio_senadores/{periodo}/','PorcentajeController@promedioSenadores');
+	Route::get('/diputadosPorDistrito/{distrito}/{periodo}', 'PorcentajeController@Diputados');
+	Route::get('/senadoresPorDistrito/{distrito}/{periodo}', 'PorcentajeController@Senadores');
 	Route::get('/periodoDiputados', 'PorcentajeController@periodoDiputados');
 	Route::get('/periodoSenadores', 'PorcentajeController@periodoSenadores');
+
+	/*KML*/
+	Route::get('/generarKml','PorcentajeController@generarKml');
+	Route::get('/seccionesDiputadosDistrito/{distrito}/{periodo}','PorcentajeController@seccionesDiputadosDistrito');
+	Route::get('/seccionesSenadoresDistrito/{distrito}/{periodo}','PorcentajeController@seccionesSenadoresDistrito');
 
 	/* we natives */
 	Route::get('/porcentajes/seccion/{id}/{periodo}','PorcentajeController@seccion');
