@@ -76,6 +76,10 @@ Route::middleware(['auth:api'])->group(function () {
 	Route::get('/print/seccion/{distrito}', 'PorcentajeController@print');
 	Route::get('/print/seccionUni/{id}','PorcentajeController@printSeccion');
 
+	/** Angela **/
+
+	Route::get('/pautas/{distrito}/{periodo}' , 'PautasController@seccionesPautadas');
+
 
 
 
